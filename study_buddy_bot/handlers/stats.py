@@ -4,7 +4,7 @@ from aiogram.types import Message
 from study_buddy_bot.models import User, Task
 from study_buddy_bot.db import AsyncSessionLocal
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, or_
 from datetime import datetime, timedelta
 
 router = Router()

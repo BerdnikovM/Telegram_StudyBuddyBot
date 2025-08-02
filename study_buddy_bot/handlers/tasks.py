@@ -41,7 +41,7 @@ async def add_task_text(message: Message, state: FSMContext):
 async def add_task_deadline(message: Message, state: FSMContext):
     try:
         input_date = message.text.strip()
-        task_deadline = datetime.strftime(input_date, "%Y-%m-%d").date()
+        task_deadline = datetime.strptime(input_date, "%Y-%m-%d").date()
         if task_deadline < date.today():
             await message.answer("Дедлайн не может быть в прошлом! Введите корректную дату (ГГГГ-ММ-ДД):")
             return
