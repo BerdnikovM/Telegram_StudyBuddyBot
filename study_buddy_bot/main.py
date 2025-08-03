@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import sys
 from aiogram import Bot, Dispatcher
 from study_buddy_bot.config import BOT_TOKEN
 from study_buddy_bot.handlers import admin, common, stats, tasks
@@ -8,7 +9,8 @@ from study_buddy_bot.scheduler import start_scheduler
 # 1. Настроим логирование
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    stream=sys.stdout,
 )
 
 def register_handlers(dp: Dispatcher):

@@ -1,3 +1,4 @@
+import logging
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from datetime import datetime, timedelta
 from aiogram import Bot
@@ -37,8 +38,8 @@ async def notify_tomorrows_tasks(bot: Bot):
                     msg += f"• {t.description}\n"
                 try:
                     await bot.send_message(user.telegram_id, msg, parse_mode="HTML")
-                except Exception as e:
-                    print(f"[Scheduler] Не удалось отправить {user.telegram_id}: {e}")
+                except Exception:
+                    logging.exception("[Scheduler] Не удалось отправить %s", user.telegram_id)
                     continue
 
 def start_scheduler(bot: Bot):
@@ -52,4 +53,4 @@ def start_scheduler(bot: Bot):
         hour=19, minute=0
     )
     scheduler.start()
-    print("[Scheduler] Запущен ежедневный планировщик рассылки задач на завтра.")
+    logging.info("[Scheduler] Запущен ежедневный планировщик рассылки задач на завтра.")
