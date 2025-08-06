@@ -7,7 +7,7 @@ from aiogram.fsm.state import StatesGroup, State
 from study_buddy_bot.db import AsyncSessionLocal
 from study_buddy_bot.models import Task, User
 from sqlalchemy import select
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 
 router = Router()
@@ -78,7 +78,7 @@ async def add_task_deadline(message: Message, state: FSMContext):
                 user_id=user.id,
                 description=task_text,
                 deadline=task_deadline,
-                created_at=datetime.utcnow(),
+                created_at=datetime.utcnow() + timedelta(hours=3),
                 is_done=False,
             )
             session.add(task)
@@ -103,7 +103,7 @@ async def edit_task_start(message: Message, state: FSMContext):
     try:
         parts = message.text.strip().split(maxsplit=1)
         if len(parts) < 2 or not parts[1].isdigit():
-            await message.answer("Укажи номер задачи для изменения: /edit <номер>")
+            await message.answer("Укажи номер задачи для изменения: /edit &lt;номер&gt;")
             return
         await state.update_data(edit_task_number=int(parts[1]))
         await message.answer("Что хочешь изменить? Напиши: текст или дедлайн.")
@@ -194,7 +194,7 @@ async def delete_task(message: Message):
     try:
         parts = message.text.strip().split(maxsplit=1)
         if len(parts) < 2 or not parts[1].isdigit():
-            await message.answer("Укажи номер задачи для удаления: /delete <номер>")
+            await message.answer("Укажи номер задачи для удаления: /delete &lt;номер&gt;")
             return
         task_number = int(parts[1])
 
@@ -219,7 +219,7 @@ async def delete_task(message: Message):
                 return
 
             task = tasks[task_number - 1]
-            session.delete(task)
+            await session.delete(task)
             await session.commit()
 
         await message.answer("Задача удалена.")
@@ -269,7 +269,7 @@ async def done_task(message: Message):
     try:
         parts = message.text.strip().split(maxsplit=1)
         if len(parts) < 2 or not parts[1].isdigit():
-            await message.answer("Пожалуйста, укажи номер задачи из списка: /done <номер>")
+            await message.answer("Пожалуйста, укажи номер задачи из списка: /done &lt;номер&gt;")
             return
         task_number = int(parts[1])
 
@@ -299,7 +299,7 @@ async def done_task(message: Message):
                 return
 
             task.is_done = True
-            task.done_at = datetime.utcnow()
+            task.done_at = datetime.utcnow() + timedelta(hours=3)
             await session.commit()
 
         await message.answer(f"Задача <b>{task.description}</b> отмечена как выполненная! ✅", parse_mode="HTML")

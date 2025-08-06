@@ -5,7 +5,7 @@ from aiogram.types import Message
 from study_buddy_bot.models import User
 from study_buddy_bot.db import AsyncSessionLocal
 from sqlalchemy import select
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 router = Router()
@@ -24,7 +24,7 @@ async def cmd_start(message: Message):
                     telegram_id=message.from_user.id,
                     first_name=message.from_user.first_name,
                     username=message.from_user.username,
-                    registered_at=datetime.utcnow(),
+                    registered_at=datetime.utcnow() + timedelta(hours=3),
                 )
                 session.add(user)
                 await session.commit()
@@ -49,9 +49,9 @@ async def cmd_help(message: Message):
     try:
         text = (
             "📚 <b>Доступные команды:</b>\n"
-            "/add <текст> — добавить задачу (дедлайн — сегодня)\n"
+            "/add &lt;текст&gt; — добавить задачу (дедлайн — сегодня)\n"
             "/list — список твоих задач\n"
-            "/done <номер> — отметить задачу выполненной\n"
+            "/done &lt;номер&gt; — отметить задачу выполненной\n"
             "/stats — статистика за неделю\n"
             "/help — эта справка"
         )

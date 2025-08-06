@@ -44,13 +44,13 @@ async def notify_tomorrows_tasks(bot: Bot):
 
 def start_scheduler(bot: Bot):
     """
-    Запускает планировщик и добавляет ежедневную задачу на 19:00 (UTC).
+    Запускает планировщик и добавляет ежедневную задачу на 19:00 (MSK).
     """
     scheduler.add_job(
         notify_tomorrows_tasks,
         "cron",
         [bot],
-        hour=19, minute=0
+        hour=19, minute=0 # например, для 18:00 по МСК (UTC+3)
     )
     scheduler.start()
     logging.info("[Scheduler] Запущен ежедневный планировщик рассылки задач на завтра.")
